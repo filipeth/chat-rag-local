@@ -1,0 +1,53 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama/_data:/root/.ollama
+      - ./ollama/entrypoint.sh:/entrypoint.sh
+    networks:
+      - app-network
+    entrypoint: ["/usr/bin/bash", "/entrypoint.sh"]
+
+  knowledge-base:
+    build:
+      context: ./knowledge_base
+      dockerfile: Dockerfile
+    ports:
+      - "8777:8000"
+    depends_on:
+      - qdrant
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  chat_rag:
+    build:
+      context: ./chat_rag
+      dockerfile: Dockerfile
+    ports:
+      - "8778:8000"
+    depends_on:
+      - qdrant
+      - knowledge-base
+      - ollama
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  ollama:
