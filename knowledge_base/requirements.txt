@@ -1,0 +1,6 @@
+fastapi
+pydantic
+qdrant-client[fastembed]
+requests
+unstructured
+uvicorn
