@@ -1,4 +1,9 @@
 fastapi
+langchain-community==0.2.4
+langchain-core==0.2.5
+langchain-experimental==0.0.60
+langchain-text-splitters==0.2.1
+langchain==0.2.3
 pydantic
 qdrant-client[fastembed]
 requests
