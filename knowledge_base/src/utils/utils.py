@@ -6,7 +6,7 @@ from langchain_core.embeddings import Embeddings
 from langchain_core.pydantic_v1 import BaseModel
 
 from langchain_experimental.text_splitter import SemanticChunker
-from src.vector_db.vector_db import client
+from src.services.vector_db.vector_db import client
 
 def load_html(data: str = None, file = None):
     if file:
