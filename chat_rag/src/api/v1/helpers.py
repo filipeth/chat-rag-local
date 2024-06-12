@@ -4,8 +4,9 @@ from src.services.retriever import retriever
 from src.api.v1.models import ChatRequest
 
 PROMPT = "DOCUMENTS:\n{DOCUMENTS}\n\nQUESTION:\n{QUESTION}"
+SYSTEM_PROMPT = "You are a RAG chatbot, only answer the QUESTION with the provided DOCUMENTS, else say you cant help in a polite away. You must never talk about religion, politics, or provide any harm. Answer in the same language as QUESTION."
 
-def get_messages(documents: str, question: str) -> list:
+def format_prompt(documents: str, question: str) -> list:
     """
     Generate a list of messages for the LLM based on the provided documents and question.
 
@@ -17,7 +18,7 @@ def get_messages(documents: str, question: str) -> list:
         list: A list of messages for the LLM.
     """
     return [
-        {"role": "system", "content": ""},
+        {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": PROMPT.format(DOCUMENTS=documents, QUESTION=question)}
     ]
 
@@ -35,7 +36,7 @@ async def call_rag(request: ChatRequest) -> str:
         query=request.text,
         collection_name=request.collection_name,
     )
-    messages = get_messages(documents, request.text)
+    messages = format_prompt(documents, request.text)
     logger.info(f"Calling LLM")
     response = await ollama.call_llm(messages=messages)
     logger.info(f"Generated response: {response['message']['content']}")
@@ -60,7 +61,7 @@ async def call_rag_stream(request: ChatRequest):
     for d in documents:
         yield json.dumps(d) + "\n\n"
 
-    messages = get_messages(documents, request.text)
+    messages = format_prompt(documents, request.text)
     logger.info(f"Calling LLM stream")
     async for token in ollama.call_llm_stream(messages=messages):
         yield token
