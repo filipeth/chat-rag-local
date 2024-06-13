@@ -22,6 +22,10 @@ async def vectorize(collection_name: str, file: UploadFile):
     Raises:
         HTTPException: If an error occurs during the vectorization process.
     """
+    # Check if the file extension is supported
+    supported_extensions = [".htm", ".html"]
+    if not any(ext in file.filename for ext in supported_extensions):
+        raise HTTPException(status_code=400, detail="File format not supported")
     try:
         await call_vectorize(collection_name, file)
         return JSONResponse({"message": "Document vectorized and added to database"})
