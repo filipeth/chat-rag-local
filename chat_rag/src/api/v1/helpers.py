@@ -1,10 +1,16 @@
-from typing import Union, AsyncGenerator
-from src.services.llms import ollama 
+import os
+import logging
+import json
+from src.services.llms import ollama
 from src.services.retriever import retriever
 from src.api.v1.models import ChatRequest
 
-PROMPT = "DOCUMENTS:\n{DOCUMENTS}\n\nQUESTION:\n{QUESTION}"
-SYSTEM_PROMPT = "You are a RAG chatbot, only answer the QUESTION with the provided DOCUMENTS, else say you cant help in a polite away. You must never talk about religion, politics, or provide any harm. Answer in the same language as QUESTION."
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+SYSTEM_PROMPT = os.getenv("SYSTEM_PROMPT")
+PROMPT = os.getenv("PROMPT")
+
 
 def format_prompt(documents: str, question: str) -> list:
     """

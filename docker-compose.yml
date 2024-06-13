@@ -23,6 +23,8 @@ services:
     build:
       context: ./knowledge_base
       dockerfile: Dockerfile
+    env_file:
+      - ./knowledge_base/.env
     ports:
       - "8777:8000"
     depends_on:
@@ -31,10 +33,12 @@ services:
       - app-network
     restart: unless-stopped
 
-  chat_rag:
+  chat-rag:
     build:
       context: ./chat_rag
       dockerfile: Dockerfile
+    env_file:
+      - ./chat_rag/.env
     ports:
       - "8778:8000"
     depends_on:

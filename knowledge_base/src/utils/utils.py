@@ -1,3 +1,4 @@
+import os
 from typing import List, Literal, Any
 import numpy as np
 from langchain_core.embeddings import Embeddings
@@ -7,9 +8,9 @@ from unstructured.partition.html import partition_html
 from src.services.vector_db.vector_db import client
 
 # Constants
-QDRANT_EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-SEMANTIC_CHUNKER_TYPE = "percentile"
-SEMANTIC_CHUNKER_AMOUNT = 85
+QDRANT_EMBED_MODEL = os.getenv("QDRANT_EMBED_MODEL")
+SEMANTIC_CHUNKER_TYPE = os.getenv("SEMANTIC_CHUNKER_TYPE")
+SEMANTIC_CHUNKER_AMOUNT = int(os.getenv("SEMANTIC_CHUNKER_AMOUNT"))
 
 
 class QdrantEmbeddings(BaseModel, Embeddings):

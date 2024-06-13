@@ -1,6 +1,9 @@
+import os
 from fastapi import APIRouter, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from src.api.v1.helpers import call_vectorize, call_search
+
+QDRANT_SEARCH_LIMIT = int(os.getenv("QDRANT_SEARCH_LIMIT"))
 
 router = APIRouter()
 
@@ -27,14 +30,14 @@ async def vectorize(collection_name: str, file: UploadFile):
         raise HTTPException(status_code=500, detail="An error occurred during vectorization")
 
 @router.get("/search")
-def search(query: str, collection_name: str, limit: int = 10):
+def search(query: str, collection_name: str, limit: int = QDRANT_SEARCH_LIMIT):
     """
     Search for similar documents in the specified collection based on a query.
 
     Args:
         query (str): The search query.
         collection_name (str): The name of the collection to search in.
-        limit (int, optional): The maximum number of search results to return. Defaults to 10.
+        limit (int, optional): The maximum number of search results to return. Defaults to QDRANT_SEARCH_LIMIT.
 
     Returns:
         dict: The search results containing the similar documents.
@@ -48,7 +51,7 @@ def search(query: str, collection_name: str, limit: int = 10):
             collection_name=collection_name,
             limit=limit
         )
-        return JSONResponse(results)
+        return results
     except Exception as e:
         print(f"Error during search: {str(e)}")
         raise HTTPException(status_code=500, detail="An error occurred during search")

@@ -1,8 +1,14 @@
+import os
 import aiohttp
-import asyncio
+import logging
 
-SEARCH_API_URL = "http://knowledge-base:8000/v1/search"
-DEFAULT_LIMIT = 5
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Constants
+SEARCH_API_URL = os.getenv("SEARCH_API_URL")
+DEFAULT_LIMIT = int(os.getenv("SEARCH_LIMIT"))
 
 async def asearch(query: str, collection_name: str, limit: int = DEFAULT_LIMIT) -> dict:
     """

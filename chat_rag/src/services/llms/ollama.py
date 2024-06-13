@@ -1,13 +1,14 @@
 import os
 import aiohttp
-import asyncio
 import re
+import logging
 
-LLM_API_URL = "https://api.openai.com/v1/chat/completions"
-LLM_API_URL = "http://localhost:11434/api/chat"
-LLM_API_URL = "http://ollama:11434/api/chat"
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-LLM_MODEL = "phi3:mini"
+# Constants
+LLM_API_URL = os.getenv("LLM_API_URL")
+LLM_MODEL = os.getenv("LLM_MODEL")
 
 async def call_llm_stream(messages: list[dict], model: str = LLM_MODEL):
     """
