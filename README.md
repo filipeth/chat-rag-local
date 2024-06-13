@@ -30,37 +30,56 @@ Access the services through the exposed ports on `localhost`.
 ### APIs
 
 1. **Knowledge base**
-    - `vectorize` http://localhost:8777/v1/vectorize
+    1. ENV VARIABLES
+        - `LLM_API_URL` = "http://ollama:11434/api/chat" ollama url
+        - `LLM_MODEL` = "phi3:mini" llm model to generate text
+        - `QDRANT_URL` = "http://qdrant:6333" qdrant url
+        - `QDRANT_EMBED_MODEL` = "sentence-transformers/all-MiniLM-L6-v2" model used for embedding
+        - `QDRANT_SEARCH_LIMIT` = "10" number of itens to fetch from vectordb
+        - `SEMANTIC_CHUNKER_TYPE` = "percentile" params for semantic chunking
+        - `SEMANTIC_CHUNKER_AMOUNT` = "85" params for semantic chunking
 
-    ```shell
-    curl -X 'POST' \
-    'http://localhost:8777/v1/vectorize?collection_name=teste' \
-    -H 'accept: application/json' \
-    -H 'Content-Type: multipart/form-data' \
-    -F 'file=@pagina_web.htm;type=text/html'
-    ```
+    2. ENDPOINTS
+        - `vectorize` http://localhost:8777/v1/vectorize
 
-    - `search` http://localhost:8777/v1/search
+        ```shell
+        curl -X 'POST' \
+        'http://localhost:8777/v1/vectorize?collection_name=teste' \
+        -H 'accept: application/json' \
+        -H 'Content-Type: multipart/form-data' \
+        -F 'file=@pagina_web.htm;type=text/html'
+        ```
 
-    ```shell
-    curl -X 'GET' \
-    'http://localhost:8777/v1/search?query=Qual%20%C3%A9%20o%20principal%20produto%20da%20sua%20empresa%3F&collection_name=teste' \
-    -H 'accept: application/json'
-    ```
+        - `search` http://localhost:8777/v1/search
+
+        ```shell
+        curl -X 'GET' \
+        'http://localhost:8777/v1/search?query=Qual%20%C3%A9%20o%20principal%20produto%20da%20sua%20empresa%3F&collection_name=teste' \
+        -H 'accept: application/json'
+        ```
 
 2. **Chat RAG**
-    - `chat` http://localhost:8778/v1/chat
-    ```shell
-    curl -X 'POST' \
-    'http://localhost:8778/v1/chat' \
-    -H 'accept: application/json' \
-    -H 'Content-Type: application/json' \
-    -d '{
-    "collection_name": "teste",
-    "text": "Qual é o principal produto da sua empresa?",
-    "stream": false
-    }'
-    ```
+    1. ENV VARIABLES
+        - `LLM_API_URL` = "http://ollama:11434/api/chat" ollama endpoint
+        - `LLM_MODEL` = "phi3:mini" llm model to generate text
+        - `SEARCH_LIMIT` = "10" number of itens to fetch from vectordb
+        - `SEARCH_API_URL` = "http://knowledge-base:8000/v1/search"
+        - `PROMPT` = "DOCUMENTS:\n{DOCUMENTS}\n\nQUESTION:\n{QUESTION}"
+        - `SYSTEM_PROMPT` = prompt
+
+    2. ENDPOINTS
+        - `chat` http://localhost:8778/v1/chat
+        ```shell
+        curl -X 'POST' \
+        'http://localhost:8778/v1/chat' \
+        -H 'accept: application/json' \
+        -H 'Content-Type: application/json' \
+        -d '{
+        "collection_name": "teste",
+        "text": "Qual é o principal produto da sua empresa?",
+        "stream": false
+        }'
+        ```
 
 ## 🎨 Customization
 
@@ -71,5 +90,5 @@ The project is highly customizable to suit your specific needs:
 
 ## Limitations
 
-1. Only `html` type file is allowed for now. In the future will be added support to other types of documents such as `.pdf` and `.txt`, and also websites.
+1. Only `html` and `.txt` type files are allowed for now. In the future will be added support to other types of documents such as `.pdf` and `.doc`, and also websites.
 2. Not support for evaluations, metrics and tracing for now. Those are super important features that must be implemented in the near future.
