@@ -33,3 +33,8 @@ The project is highly customizable to suit your specific needs:
 
 1. Modify the environment variables in the respective `.env` files (`./knowledge_base/.env` and `./chat_rag/.env`) to configure the Knowledge Base and Chat RAG services.
 1. Customize the services or add new ones by modifying the Docker Compose configuration file (docker-compose.yml) and the respective service directories.
+
+## Limitations
+
+1. Only `html` type file is allowed for now. In the future will be added support to other types of documents such as `.pdf` and `.txt`, and also websites.
+2. Not support for evaluations, metrics and tracing for now. Those are super important features that must be implemented in the near future.
