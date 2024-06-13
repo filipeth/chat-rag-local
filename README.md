@@ -27,6 +27,41 @@ Navigate to the project directory.
 Run `docker-compose up -d` to start all the services in detached mode.
 Access the services through the exposed ports on `localhost`.
 
+### APIs
+
+1. **Knowledge base**
+    - `vectorize` http://localhost:8777/v1/vectorize
+
+    ```shell
+    curl -X 'POST' \
+    'http://localhost:8777/v1/vectorize?collection_name=teste' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: multipart/form-data' \
+    -F 'file=@pagina_web.htm;type=text/html'
+    ```
+
+    - `search` http://localhost:8777/v1/search
+
+    ```shell
+    curl -X 'GET' \
+    'http://localhost:8777/v1/search?query=Qual%20%C3%A9%20o%20principal%20produto%20da%20sua%20empresa%3F&collection_name=teste' \
+    -H 'accept: application/json'
+    ```
+
+2. **Chat RAG**
+    - `chat` http://localhost:8778/v1/chat
+    ```shell
+    curl -X 'POST' \
+    'http://localhost:8778/v1/chat' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "collection_name": "teste",
+    "text": "Qual é o principal produto da sua empresa?",
+    "stream": false
+    }'
+    ```
+
 ## 🎨 Customization
 
 The project is highly customizable to suit your specific needs:
